@@ -7,9 +7,10 @@
 //
 
 import Foundation
+import SwiftyJSON
+import RealmSwift
 
-
-class All{
+class AllPhotos{
     var page : Int?
     var pages : Int?
     var perpage : Int?
@@ -59,4 +60,50 @@ extension Photo{
         
     }
 }
+extension AllPhotos{
+    public static func transformAll(dict : [String : Any] ,json : JSON) -> AllPhotos{
+       
+        let allPhotos = AllPhotos()
+        allPhotos.page = dict["page"] as? Int
+        allPhotos.pages = dict["pages"] as? Int
+        allPhotos.perpage = dict["perpage"] as? Int
+        allPhotos.total = dict["total"] as? Int
+        allPhotos.photo = downloadPhotosData(json: json, completed: {
+            
+        })
+    
+       return allPhotos
+           
+        }
+        
+         
+        
+    
+    static func downloadPhotosData(json : JSON, completed: @escaping () -> Void) ->[Photo]{
+        var downloadPhotos = [Photo]()
+        let tempResult = json["photos"]["photo"].arrayObject
+        let objectNumber = json["photos"]["page"].int!
+            print("objectnumber =====---->\(objectNumber)")
+        for i in 0...json["photos"]["perpage"].int!-1{
+
+            if let dict = tempResult![i] as? [String : Any]{
+                let newPhoto = Photo.transformPhoto(dict:dict)
+                downloadPhotos.append(newPhoto)
+
+               
+
+
+               }
+        }
+        print("length")
+        completed()
+        return downloadPhotos
+    }
+}
+    
+    
+    
+    
+    
+
 

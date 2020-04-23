@@ -22,7 +22,6 @@ class ImageCollectionViewCell: UICollectionViewCell {
     func updateImageCollection(){
         if let photoUrlString = photo?.url_s{
             let photoURL = URL(string: photoUrlString)
-            print(photoURL)
             photoImageView.sd_setImage(with: photoURL)
             }
     }
